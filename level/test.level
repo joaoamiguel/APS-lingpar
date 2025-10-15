@@ -1,13 +1,11 @@
-// Teste básico da linguagem Level
-entity Player {
-    name: text = "Herói";
-    health: number = 100;
-}
+// test.level
+player_name: text = "";
+health: number = 0;
 
 func main() {
-    player_name: text = "Aragorn";
-    health: number = 100;
-    
+    player_name = "Aragorn";
+    health = 100;
+
     if (health > 50) {
         say("Estou bem!");
         move(5);

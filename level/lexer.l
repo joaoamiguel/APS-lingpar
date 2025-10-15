@@ -64,6 +64,8 @@ STRING  \"([^\"\\]|\\.)*\"
 ":"         { return COLON; }
 ";"         { return SEMICOLON; }
 ","         { return COMMA; }
+"//".*    { /* Ignorar comentários de linha */ }
+"/\\*"(.|\\n)*"\\*/" { /* Ignorar comentários de bloco */ }
 
 {ID}        { 
                 yylval.str = strdup(yytext); 

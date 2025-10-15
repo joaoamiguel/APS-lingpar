@@ -279,7 +279,8 @@ boolean: TRUE
 %%
 
 void yyerror(char *s) {
-    fprintf(stderr, "Erro sintático: %s\n", s);
+    extern char *yytext;
+    fprintf(stderr, "Erro sintático: %s no token '%s'\n", s, yytext);
 }
 
 int main(int argc, char **argv) {

@@ -1,0 +1,17 @@
+// Teste básico da linguagem Level
+entity Player {
+    name: text = "Herói";
+    health: number = 100;
+}
+
+func main() {
+    player_name: text = "Aragorn";
+    health: number = 100;
+    
+    if (health > 50) {
+        say("Estou bem!");
+        move(5);
+    }
+    
+    return;
+}

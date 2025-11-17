@@ -119,7 +119,7 @@ func encounter_bat() {
 }
 
 func main() {
-    say("=== Aventura: Duas Criaturas ===");
+    say("Iniciando jogo");
     announce_status();
 
     // Encontro com o Orc

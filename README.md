@@ -6,6 +6,18 @@
 ## GameVM
        A linguagem foi projetada para ser interpretada por uma máquina virtual, a GameVM. Ela é responsável por traduzir e executar as instruções da Level, simulando o comportamento do jogo em tempo real. Dessa forma, é possível desenvolver mecânicas de jogo, narrativas e batalhas diretamente no terminal.
 
+
+# Para testar
+
+       Deve ser utilizado alguma distribuição do Linux, ou alguma VM para Windows (WSL por exemplo). Ao clonar o repositório, basta rodar no terminal:
+
+```bash
+python3 vm/main.py level/test.level
+```
+       Altere o arquivo de teste livremente para descobrir como histórias/jogos RPG são feitos no próprio terminal.
+
+
+
 # Diagrama Sintático
 
 <p align="center">

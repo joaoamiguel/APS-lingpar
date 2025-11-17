@@ -1,15 +1,163 @@
-// test.level
-player_name: text = "";
-health: number = 0;
+// test.level (corrigido) - Cena com dois inimigos: Orc (forte) e Morcego (fraco).
+// Removidos 'break;' porque language não suporta break como palavra-chave.
 
-func main() {
-    player_name = "Aragorn";
-    health = 100;
+player_name: text = "Elessar";
+health: number = 80;
+max_health: number = 120;
+player_damage: number = 30;
 
-    if (health > 50) {
-        say("Estou bem!");
-        move(5);
+potion_heal: number = 50;
+inventory: array = ["knife"];
+
+// Inimigo 1: Orc (mais forte)
+enemy_orc_name: text = "Orc Guerreiro";
+enemy_orc_hp: number = 60;
+enemy_orc_damage: number = 25;
+
+// Inimigo 2: Morcego (mais fraco)
+enemy_bat_name: text = "Morcego";
+enemy_bat_hp: number = 18;
+enemy_bat_damage: number = 8;
+
+func announce_status() {
+    say("----- Status -----");
+    say("Player:");
+    say(player_name);
+    say("HP:");
+    say(health);
+    say("Inventário (tamanho):");
+    say(len(inventory));
+    if (len(inventory) > 0) {
+        say("Itens:");
+        i: number = 0;
+        // NOTE: 'until' no runtime atual se comporta como 'while(cond)',
+        // então repetimos enquanto i < len(inventory)
+        until (i < len(inventory)) {
+            say(inventory[i]);
+            i = i + 1;
+        }
+    } else {
+        say("Nenhum item no inventário.");
     }
-    
+
+    say("Inimigos:");
+    say(enemy_orc_name);
+    say(enemy_orc_hp);
+    say(enemy_bat_name);
+    say(enemy_bat_hp);
     return;
 }
+
+
+
+func encounter_orc() {
+    say("Um Orc bloqueia seu caminho!");
+    // Orc acerta primeiro (emboscada)
+    say("Orc ataca primeiro!");
+    health = health - enemy_orc_damage;
+    if (health <= 0) {
+        say("Você foi derrotado pela emboscada do Orc...");
+        return; // fim se jogador morreu
+    }
+    say("Você sobreviveu ao golpe. Vida atual:");
+    say(health);
+
+    // Batalha: jogador ataca até orc cair ou jogador morrer
+    until (enemy_orc_hp > 0) {
+        say("Você desfere um golpe no Orc...");
+        attack(enemy_orc_hp, player_damage);  // golpe grande do jogador
+        if (enemy_orc_hp <= 0) {
+            say("Orc derrotado!");
+        } else {
+            // Orc contra-ataca (somente se ainda estiver vivo)
+            say("Orc contra-ataca!");
+            health = health - enemy_orc_damage;
+            if (health <= 0) {
+                say("O Orc te derrotou...");
+                return;
+            }
+            say("Vida após contra-ataque:");
+            say(health);
+        }
+    }
+
+    // drop do Orc: sempre solta 1 potion e às vezes outra coisa (narrativo)
+    say("Você vasculha o corpo do Orc e encontra uma potion.");
+    gather("potion");
+    return;
+}
+
+func encounter_bat() {
+    say("Um morcego aparece nas sombras!");
+    // Morcego ataca (mais fraco)
+    say("Morcego tenta acertar...");
+    health = health - enemy_bat_damage;
+    if (health <= 0) {
+        say("O morcego foi fatal... você caiu.");
+        return;
+    }
+    say("Você é atingido levemente. Vida atual:");
+    say(health);
+
+    // Batalha rápida
+    until (enemy_bat_hp > 0) {
+        say("Você ataca o morcego!");
+        attack(enemy_bat_hp, player_damage);  // ainda causa bastante dano do jogador
+        if (enemy_bat_hp <= 0) {
+            say("Morcego derrotado!");
+        } else {
+            // morcego tenta morder de novo (rápido)
+            say("Morcego bate de novo...");
+            health = health - enemy_bat_damage;
+            if (health <= 0) {
+                say("O morcego te derrubou...");
+                return;
+            }
+        }
+    }
+
+    // possível loot do morcego
+    say("Nada além de penas e um pequeno objeto brilhante...");
+    gather("small_trinket");
+    return;
+}
+
+func main() {
+    say("=== Aventura: Duas Criaturas ===");
+    announce_status();
+
+    // Encontro com o Orc (forte)
+    encounter_orc();
+    // verificar se jogador morreu
+    if (health <= 0) {
+        say("Cena encerrada: você foi derrotado.");
+        return;
+    }
+
+    // Depois do orc, encontro com morcego
+    encounter_bat();
+    if (health <= 0) {
+        say("Cena encerrada: você foi derrotado pelo morcego.");
+        return;
+    }
+
+    // Se chegou até aqui, derrotou ambos (ou foi salvo)
+    say("Você venceu ambos os inimigos (ou sobreviveu à luta)!");
+    say("Inventário final (itens):");
+    say(len(inventory));
+    announce_status();
+
+    // Se vida estiver baixa, usar potion automaticamente se tiver
+    if (health < max_health) {
+        say("Se houver potion, vamos usar para recuperar vida...");
+        use("potion");
+        say("Vida depois de possível uso de potion:");
+        say(health);
+    }
+
+    say("Fim da cena. Parabéns, aventureiro!");
+    return;
+}
+
+// inicia a cena
+main();
